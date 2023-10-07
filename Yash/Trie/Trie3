@@ -1,3 +1,5 @@
+
+
 class Solution(object):
     def wordBreak(self, s, wordDict):
         """
@@ -72,3 +74,4 @@ print(Solution().wordBreak("bedbathandbeyond", [
       "teddy", "bath", "bedbath", "and", "beyond"]))
 print(Solution().wordBreak("bedbathandbeyond", [
       "bed", "bath", "bedbath", "and", "away"]))
+print()
