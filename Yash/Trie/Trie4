@@ -1,0 +1,127 @@
+using System;
+ 
+class GFG {
+ 
+  static readonly int ALPHABET_SIZE = 26;
+ 
+  // trie node
+  class TrieNode {
+    public TrieNode[] children;
+ 
+    // isEndOfWord is true if the node
+    // represents end of a word
+    public bool isEndOfWord;
+ 
+    // Constructor of TrieNode
+    public TrieNode()
+    {
+      children = new TrieNode[ALPHABET_SIZE];
+      for (int i = 0; i < ALPHABET_SIZE; i++)
+        children[i] = null;
+ 
+      isEndOfWord = false;
+    }
+  }
+ 
+  // If not present, inserts key into trie
+  // If the key is prefix of trie node, just
+  // marks leaf node
+  static void insert(TrieNode root, string key)
+  {
+    TrieNode pCrawl = root;
+ 
+    for (int i = 0; i < key.Length; i++) {
+      int index = key[i] - 'a';
+      if (pCrawl.children[index] == null)
+        pCrawl.children[index] = new TrieNode();
+ 
+      pCrawl = pCrawl.children[index];
+    }
+ 
+    // Mark last node as leaf
+    pCrawl.isEndOfWord = true;
+  }
+ 
+  // Returns true if key presents in trie, else
+  // false
+  static bool search(TrieNode root, string key)
+  {
+    TrieNode pCrawl = root;
+ 
+    for (int i = 0; i < key.Length; i++) {
+      int index = key[i] - 'a';
+      if (pCrawl.children[index] == null)
+        return false;
+ 
+      pCrawl = pCrawl.children[index];
+    }
+    return (pCrawl != null && pCrawl.isEndOfWord);
+  }
+ 
+  // Returns true if string can be segmented
+  // into space separated words, otherwise
+  // returns false
+  static bool wordBreak(string str, TrieNode root)
+  {
+    int size = str.Length;
+ 
+    // Base case
+    if (size == 0)
+      return true;
+ 
+    // Try all prefixes of lengths from 1 to size
+    for (int i = 1; i <= size; i++) {
+      // The parameter for search is
+      // str.Substring(0, i) which is
+      // prefix (of input string) of
+      // length 'i'. We first check whether
+      // current prefix is in dictionary.
+      // Then we recursively check for remaining
+      // string str.Substring(i, size-i) which
+      // is suffix of length size-i.
+      if (search(root, str.Substring(0, i))
+          && wordBreak(str.Substring(i, size - i),
+                       root))
+        return true;
+    }
+ 
+    // If we have tried all prefixes and none
+    // of them worked
+    return false;
+  }
+ 
+  // Driver code
+  static void Main(string[] args)
+  {
+    string[] dictionary = new string[] {
+      "mobile", "samsung",  "sam",  "sung", "ma",
+      "mango",  "icecream", "and",  "go",   "i",
+      "like",   "ice",      "cream"
+      };
+ 
+    int n = dictionary.Length;
+    TrieNode root = new TrieNode();
+ 
+    // Construct trie
+    for (int i = 0; i < n; i++)
+      insert(root, dictionary[i]);
+ 
+    Console.WriteLine(
+      wordBreak("ilikesamsung", root) ? "Yes" : "No");
+    Console.WriteLine(
+      wordBreak("iiiiiiii", root) ? "Yes" : "No");
+    Console.WriteLine(wordBreak("", root) ? "Yes"
+                      : "No");
+    Console.WriteLine(
+      wordBreak("ilikelikeimangoiii", root) ? "Yes"
+      : "No");
+    Console.WriteLine(wordBreak("samsungandmango", root)
+                      ? "Yes"
+                      : "No");
+    Console.WriteLine(
+      wordBreak("samsungandmangok", root) ? "Yes"
+      : "No");
+  }
+}
+ 
+// This code is contributed by cavi4762.
